@@ -1,29 +1,45 @@
 // src/App.tsx
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import { ReaderContainer } from "./components/ReaderContainer";
-import { FlashcardPage } from "./components/FlashcardPage";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Navbar } from "./components/common/Navbar";
+import { Footer } from "./components/common/Footer";
 
+// Route configs
+import { ReaderRoutes } from "./routes/ReaderRoutes";
+import { FlashcardRoutes } from "./routes/FlashcardRoutes";
+import { LibraryRoutes } from "./routes/LibraryRoutes";
+
+/**
+ * Top-level layout container: 
+ * - A <Navbar/>
+ * - <Routes/>
+ * - A <Footer/>
+ */
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <header className="bg-blue-600 text-white p-4 shadow flex items-center">
-        <h1 className="text-xl font-bold mr-4">My Language Learning App</h1>
-        <Link to="/reader" className="mr-4 underline">
-          Reader
-        </Link>
-        <Link to="/flashcards" className="underline">
-          Flashcards
-        </Link>
-      </header>
+    <div className="min-h-screen flex flex-col bg-base-100 text-base-content">
+      <Navbar />
 
-      <main className="flex-1 p-4">
+      <div className="flex-1">
         <Routes>
-          <Route path="/reader" element={<ReaderContainer />} />
-          <Route path="/flashcards/*" element={<FlashcardPage />} />
-          <Route path="/" element={<ReaderContainer />} />
+          {/* Home => redirect to library */}
+          <Route path="/" element={<Navigate to="/library" replace />} />
+
+          {/* Library management */}
+          <Route path="/library/*" element={<LibraryRoutes />} />
+
+          {/* Reading page */}
+          <Route path="/reader/*" element={<ReaderRoutes />} />
+
+          {/* Flashcards */}
+          <Route path="/flashcards/*" element={<FlashcardRoutes />} />
+
+          {/* 404 fallback */}
+          <Route path="*" element={<h1 className="p-4 text-center text-red-500">Page not found</h1>} />
         </Routes>
-      </main>
+      </div>
+
+      <Footer />
     </div>
   );
 }
